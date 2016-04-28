@@ -1,0 +1,5 @@
+SELECT movies.*
+    FROM movies
+            LEFT JOIN series
+                        ON movies.idmovies = series.idmovies
+                            WHERE series.idmovies IS NULL and not movies.type=1 and not movies.type=2;
