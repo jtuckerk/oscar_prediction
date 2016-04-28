@@ -9,7 +9,7 @@ import re
 from variables import MACHINE, VUID, PAGE_TABLE, INDEX_TABLE, COLUMN_FAMILY, COLUMN
 
 index_file = 'hdfs:///user/%s/word_index' % VUID
-test_file = 'hdfs:///user/kirvenjt/testfile'
+test_file = 'hdfs:///user/kirvenjt/oscar_data/movies.list.clean'
 '''
 A good example can be found at: http://www.mccarroll.net/blog/pyspark2/
 '''
@@ -18,12 +18,13 @@ def index(spark, wiki_file):
 #use this for testing after map
 #.take(300)
 #             .flatMap(lambda x: [(x[0], x[1], x[2], x[3], x[4]) for x in x])\
-    wiki_data.map(get_title_and_year)\
-             .filter(has_name_and_year)\
-             .map(api_request)\
-             .filter(no_review)\
-             .saveAsTextFile(test_file)
+#             .map(api_request)\
+#             .filter(no_review)\
 
+    c = wiki_data.map(get_title_and_year)\
+             .filter(has_name_and_year)\
+             .saveAsTextFile(test_file)
+    #open("count.txt", 'w').write(str(c))
 def no_review(item):
     return item != None
 def api_request(item):
@@ -54,8 +55,14 @@ if __name__ == '__main__':
     elif sys.argv[1] == 'cluster':
         conf.setMaster("spark://10.0.22.241:7077")
         print 'Running on cluster' 
-    conf.set("spark.executor.memory", "10g")
-    conf.set("spark.driver.memory", "10g")
+    conf.set("spark.executor.memory", "1g")
+    conf.set("spark.driver.memory", "1g")
+    conf.set("spark.executor.memory", "1g")
+    conf.set("spark.executor.instances","100")
+    conf.set("spark.executor.cores","100")
+    conf.set("spark.cores.max", "10")
+
+
     spark = SparkContext(conf = conf)
     index(spark, sys.argv[2])
 

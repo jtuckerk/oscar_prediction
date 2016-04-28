@@ -1,36 +1,27 @@
 import omdb
 import csv
 import re
+import codecs
+outfile = codecs.open("responses.txt", 'w', encoding='utf-8')
 
-myfile = open("myfile", 'wb')
-wr = csv.writer(myfile, quoting=csv.QUOTE_ALL) 
 
-with open('movies.list', 'r') as f:
-    lines = []
-    for line in f: 
-        if line[0] == '"':
-            line = line.strip()
-            movtitle = re.search('"(.*)"', line)
-            movtitle = movtitle.group(1)
-            movyear = line[line.find("(")+1:line.find(")")]
-            try: 
-                movyear = int(movyear)
-            except ValueError: 
-                movyear = 0
-            lines.append((str(movtitle), int(movyear)))
     #lines = set(lines)
 '''
 with open('testf', 'w') as f2:
     for item in lines: 
         f2.write("%s\n" % item)
 '''
-mlist = lines[:6000] #[('True Grit', 1969), ('True Grit', 2000), ('True Grit', 2010)]
+ #[('True Grit', 1969), ('True Grit', 2000), ('True Grit', 2010)]
 scorelist = [] 
 #print mlist
 #movie = omdb.get(title='True Grit', year=1900, tomatoes=True)
 #print movie
+import  multiprocessing
+print "seems legit"
 
-for item in mlist:
+
+def request(item):
+
     movie = omdb.get(title=item[0], year=item[1], tomatoes=True)
     if str(movie) != "Item({})":
         mtitle = movie.title
@@ -39,6 +30,30 @@ for item in mlist:
         conscore = movie.tomato_user_meter
         mid = movie.imdb_id
         if str(critscore) != "N/A":
-            scorelist.append(mid + ", " + mtitle + ", " + myear + ", " + critscore + ", " + conscore)
-            print("working")
-wr.writerow(scorelist)
+            return mid + " ||| " + mtitle + " |||  " + myear + " |||  " + critscore + " |||  " + conscore + "\n"
+        else:
+            return None
+ 
+p = multiprocessing.Pool(32)
+
+def get_movies():
+    with codecs.open('./movies.list.clean/list.txt', 'r', encoding='utf-8') as f:
+        lines = []
+        for line in f.readlines(): 
+
+           line = line.strip()
+           l = eval(line)
+
+           movtitle = l[0]
+           movyear = l[1]
+           try: 
+               movyear = int(movyear)
+           except ValueError: 
+               movyear = 0
+           yield (unicode(movtitle), int(movyear))
+
+for result in p.imap(request, get_movies()):
+    # (filename, count) tuples from worker
+    if result:
+        outfile.write(result)
+
