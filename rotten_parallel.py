@@ -51,9 +51,12 @@ def get_movies():
            except ValueError: 
                movyear = 0
            yield (unicode(movtitle), int(movyear))
-
+count =0 
 for result in p.imap(request, get_movies()):
     # (filename, count) tuples from worker
+    count +=1
     if result:
         outfile.write(result)
+    if count%5000==0:
+        print count
 
