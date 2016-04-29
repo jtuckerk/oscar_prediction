@@ -1,7 +1,12 @@
 from pyspark import SparkConf, SparkContext
 
 import sys
+import sys
+sys.path.insert(0, "/home/kirvenjt/.conda/envs/venv/lib/python2.7/site-packages")
 
+from DB import DB
+DB_NAME = 'imdb'
+db = DB(DB_NAME)
 import omdb
 import csv
 import re
@@ -9,36 +14,29 @@ import re
 from variables import MACHINE, VUID, PAGE_TABLE, INDEX_TABLE, COLUMN_FAMILY, COLUMN
 
 index_file = 'hdfs:///user/%s/word_index' % VUID
-test_file = 'hdfs:///user/kirvenjt/oscar_data/movies.list.clean'
+test_file = 'hdfs:///user/kirvenjt/oscar_data/testout'
 '''
-an attempt at doing the rotten api requests from spark - too slow
+Doesn't work cannot import something from DB
 '''
 def index(spark, wiki_file):
     wiki_data = spark.textFile(wiki_file)
 #use this for testing after map
-
+#.take(300)
 #             .flatMap(lambda x: [(x[0], x[1], x[2], x[3], x[4]) for x in x])\
 #             .map(api_request)\
 #             .filter(no_review)\
 
     c = wiki_data.map(get_title_and_year)\
              .filter(has_name_and_year)\
+             .map(test_db_query)\
              .saveAsTextFile(test_file)
     #open("count.txt", 'w').write(str(c))
-def no_review(item):
-    return item != None
-def api_request(item):
-    movie = omdb.get(title=item[0], year=item[1], tomatoes=True)
-    if str(movie) != "Item({})":
-        mtitle = movie.title
-        myear = movie.year
-        critscore = movie.tomato_meter
-        conscore = movie.tomato_user_meter
-        mid = movie.imdb_id
-        if str(critscore) != "N/A":
-            return (mid, mtitle, myear, critscore, conscore)
-        else:
-            return None
+
+def test_db_query(title_year):
+    t = title_year[0] 
+    y = title_year[1]
+    q = "SELECT * FROM movies WHERE title="+t+" AND year="+y
+    return db.query(q)
 def has_name_and_year(title_year):
     return len(title_year)==2 and not (title_year[0] == "" or title_year[1]=="")
 
