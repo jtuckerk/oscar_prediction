@@ -1,108 +1,12 @@
-Best Writing, Original Story
-Best Documentary
-Best Achievement in Music Written for Motion Pictures, Original Score
-Best Effects, Sound Effects
-Best Costume Design, Black-and-White
-Best Art Direction-Interior Decoration, Black-and-White
-Best Music, Scoring Adaptation and Original Song Score
-Best Art Direction-Set Decoration
-Best Costume Design, Black-and-White or Color
-Best Short Film, Animated
-Best Motion Picture of the Year
-Best Writing, Screenplay Based on Material from Another Medium
-Best Achievement in Makeup and Hairstyling
-Best Performance by an Actress in a Leading Role
-Best Actress in a Supporting Role
-Best Writing, Motion Picture Story
-Best Writing, Adaptation
-Best Sound
-Best Director
-Best Effects, Special Visual Effects
-Best Short Subject, Live Action Subjects
-Best Actress in a Leading Role
-Best Music, Original Music Score
-Best Art Direction, Black-and-White
-Best Achievement in Art Direction
-Best Short Subject, One-reel
-Best Writing, Screenplay Based on Material Previously Produced or Published
-Best Music, Scoring of a Musical Picture
-Best Writing, Screenplay
-Best Achievement in Sound Editing
-Best Writing, Adapted Screenplay
-Best Writing, Screenplay Written Directly for the Screen
-Best Art Direction-Set Decoration, Black-and-White
-Best Art Direction, Color
-Best Music, Substantially Original Score
-Best Achievement in Visual Effects
-Best Music, Scoring Original Song Score and/or Adaptation
-Best Performance by an Actress in a Supporting Role
-Best Costume Design, Color
-Best Writing, Best Screenplay - Adapted
-Best Makeup
-Best Music, Scoring of a Dramatic or Comedy Picture
-Best Cinematography
-Best Music, Original Song
-Best Music, Score
-Best Film Editing
-Best Achievement in Music Written for Motion Pictures, Original Song
-Best Short Subject, Cartoons
-Best Achievement in Production Design
-Best Performance by an Actor in a Supporting Role
-Best Cinematography, Color
-Best Achievement in Directing
-Best Visual Effects
-Best Music, Original Song Score
-Best Writing, Best Screenplay - Original
-Best Sound Mixing
-Best Performance by an Actor in a Leading Role
-Best Short Subject, Comedy
-Best Achievement in Film Editing
-Best Art Direction
-Best Documentary, Short Subject
-Best Short Subject, Two-reel
-Best Sound, Recording
-Best Short Subject, Color
-Best Music, Original Song Score and Its Adaptation or Best Adaptation Score
-Best Music, Original Score
-Best Music, Scoring of Music, Adaptation or Treatment
-Best Writing, Story and Screenplay
-Best Writing, Original Screenplay
-Best Achievement in Makeup
-Best Documentary, Features
-Best Short Subject, Novelty
-Best Writing, Story and Screenplay Based on Material Not Previously Published or Produced
-Best Music, Original Musical or Comedy Score
-Best Music, Score - Substantially Original
-Best Music, Original Dramatic Score
-Best Costume Design
-Best Music, Scoring of a Dramatic Picture
-Best Achievement in Sound Mixing
-Best Achievement in Cinematography
-Best Effects, Visual Effects
-Best Animated Feature Film of the Year
-Best Dance Direction
-Best Effects, Sound Effects Editing
-Best Music, Scoring
-Best Actor in a Supporting Role
-Best Music, Score of a Musical Picture (Original or Adaptation)
-Best Short Subject, Live Action Films
-Best Art Direction-Set Decoration, Color
-Best Foreign Language Film
-Best Cinematography, Black-and-White
-Best Short Film, Live Action
-Best Art Direction-Interior Decoration, Color
-Best Animated Feature
-Best Assistant Director
-Best Sound Editing
-Best Effects, Special Effects
-Best Art Direction-Set Decoration, Black-and-White or Color
-Best Documentary, Short Subjects
-Best Achievement in Costume Design
-Best Music, Original Score for a Motion Picture (not a Musical)
-Best Actor in a Leading Role
-Best Picture
-Best Writing, Story and Screenplay - Written Directly for the Screen
-Best Writing, Screenplay Adapted From Other Material
-Best Documentary, Feature
-Best Writing, Story and Screenplay Based on Factual Material or Material Not Previously Published or Produced
-Best Short Subject, Animated Films
+['Best Picture',
+'Best Actor in a Supporting Role',
+'Best Actor in a Leading Role',
+'Best Performance by an Actor in a Leading Role',
+'Best Writing, Screenplay',
+'Best Actress in a Leading Role',
+'Best Actress in a Supporting Role',
+'Best Director',
+'Best Writing, Motion Picture Story',
+'Best Actress in a Supporting Role',
+'Best Motion Picture of the Year',
+'Best Writing, Original Story']

@@ -9,7 +9,7 @@ import re
 from variables import MACHINE, VUID, PAGE_TABLE, INDEX_TABLE, COLUMN_FAMILY, COLUMN
 
 index_file = 'hdfs:///user/%s/word_index' % VUID
-test_file = 'hdfs:///user/kirvenjt/oscar_data/movies.list.clean'
+test_file = 'hdfs:///user/kirvenjt/oscar_data/omdb_responses'
 '''
 an attempt at doing the rotten api requests from spark - too slow
 '''
@@ -21,12 +21,28 @@ def index(spark, wiki_file):
 #             .map(api_request)\
 #             .filter(no_review)\
 
-    c = wiki_data.map(get_title_and_year)\
+    c = wiki_data.map(get_fields)\
              .filter(has_name_and_year)\
              .saveAsTextFile(test_file)
     #open("count.txt", 'w').write(str(c))
+
 def no_review(item):
     return item != None
+awards = ['Best Picture',
+          'Best Actor in a Supporting Role',
+          'Best Actor in a Leading Role',
+          'Best Performance by an Actor in a Leading Role',
+          'Best Writing, Screenplay',
+          'Best Actress in a Leading Role',
+          'Best Actress in a Supporting Role',
+          'Best Director',
+          'Best Writing, Motion Picture Story',
+          'Best Actress in a Supporting Role',
+          'Best Motion Picture of the Year',
+          'Best Writing, Original Story']
+def awards_we_want(item):
+    return item[1] in awards 
+
 def api_request(item):
     movie = omdb.get(title=item[0], year=item[1], tomatoes=True)
     if str(movie) != "Item({})":
@@ -40,12 +56,12 @@ def api_request(item):
         else:
             return None
 def has_name_and_year(title_year):
-    return len(title_year)==2 and not (title_year[0] == "" or title_year[1]=="")
+    return not (title_year[0] == "" or title_year[1]=="")
 
-def get_title_and_year(text):
-    t = text.split("|")
-    t = t[1:] # leave off id
-    return [x.strip() for x in t]
+def get_fields(text):
+    t = text.split(" ||| ")
+    t[4] = t[4].replace(t[0], '')
+    return [x.strip() for x in t[:-1]]
 
 if __name__ == '__main__':
     conf = SparkConf()

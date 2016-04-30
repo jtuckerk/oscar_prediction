@@ -2,6 +2,7 @@ import omdb
 import csv
 import re
 import codecs
+
 outfile = codecs.open("responses.txt", 'w', encoding='utf-8')
 
 
@@ -23,24 +24,26 @@ print "seems legit"
 def request(item):
 
     try:
-        movie = omdb.get(title=item[0], year=item[1], tomatoes=True)
+        movie = omdb.get(title=item[0], year=item[1], tomatoes=True, fullplot=True)
     except Exception as e:
         print e, "caused by", item[0]
         return None
     if str(movie) != "Item({})":
         mtitle = movie.title
         myear = movie.year
-        tomato_reviews = movie.tomato_reviews
-        print tomato_reviews
+        plot = movie.plot
+        mid = movie.imdb_id
+        print plot
+        
         if True:
-            return mid + " ||| " + mtitle + " |||  " + myear + " |||  " + tomato_reviews
+            return mid + " ||| " + mtitle + " |||  " + myear + " |||  " + plot
         else:
             return None
  
-p = multiprocessing.Pool(1)
+p = multiprocessing.Pool(32)
 import sys
 def get_movies():
-    with codecs.open('./movies.list.clean/list0-299999.txt', 'r', encoding='utf-8') as f:
+    with codecs.open('./movies.list.short/part-00000', 'r', encoding='utf-8') as f:
         lines = []
         for line in f.readlines(): 
 
