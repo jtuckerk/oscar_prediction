@@ -43,3 +43,9 @@ Best Actress in a Supporting Role
 Best Motion Picture of the Year
 Best Writing, Original Stor
 
+oscar_y: in hdfs:///user/kirvenjt/oscar_data/oscar_y
+for use in testing in format ((movie_title, year), win_code)
+created with the file oscar_y_create which has an example joining.
+win code is +1 for actor/actress nomination/win +2 for movie nomination/win
+so a movie with a score of 3 has at least one actor win and movie, win which is any non actor related award from the list above 
+we could make this file so we can test on wins vs nominations, but we dont have to

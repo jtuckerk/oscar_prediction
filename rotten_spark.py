@@ -1,4 +1,4 @@
-from pyspark import SparkConf, SparkContext
+From pyspark import SparkConf, SparkContext
 
 import sys
 

@@ -3,7 +3,7 @@ import csv
 import re
 import codecs
 
-outfile = codecs.open("responses.txt", 'w', encoding='utf-8')
+outfile = codecs.open("plot_responses.txt", 'w', encoding='utf-8')
 
 
     #lines = set(lines)
@@ -24,26 +24,28 @@ print "seems legit"
 def request(item):
 
     try:
-        movie = omdb.get(title=item[0], year=item[1], tomatoes=True, fullplot=True)
-    except Exception as e:
-        print e, "caused by", item[0]
-        return None
-    if str(movie) != "Item({})":
-        mtitle = movie.title
-        myear = movie.year
-        plot = movie.plot
-        mid = movie.imdb_id
-        print plot
-        
-        if True:
-            return mid + " ||| " + mtitle + " |||  " + myear + " |||  " + plot
-        else:
+        try:
+            movie = omdb.get(title=item[0], year=item[1], tomatoes=True, fullplot=True)
+        except Exception as e:
+            print e, "caused by", item[0]
             return None
- 
+        if unicode(movie) != "Item({})":
+            mtitle = movie.title
+            myear = movie.year
+            plot = movie.plot
+            mid = movie.imdb_id
+            plot = plot.replace('\n', ' ')
+            if True:
+                return mid + " ||| " + mtitle + " |||  " + myear + " |||  " + plot
+            else:
+                return None
+    except Exception as e:
+        print e
+        return None
 p = multiprocessing.Pool(32)
 import sys
 def get_movies():
-    with codecs.open('./movies.list.short/part-00000', 'r', encoding='utf-8') as f:
+    with codecs.open('./movies.list.short/full', 'r', encoding='utf-8') as f:
         lines = []
         for line in f.readlines(): 
 
@@ -65,7 +67,7 @@ for result in p.imap(request, get_movies()):
     # (filename, count) tuples from worker                                                                                                                                         
     count +=1
     if result:
-        outfile.write(result)
+        outfile.write(result+'\n')
     if count%500==0:
         print count, int((time.time()-start))
         sys.stdout.flush()
