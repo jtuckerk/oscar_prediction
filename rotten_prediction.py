@@ -55,17 +55,6 @@ def create_input(rotten):
     return X 
     
 def create_output(rotten, oscars): #def create_output(batting, all_stars):
-    '''
-    Y = scipy.zeros(len(batting))
-    for i in range(0, len(batting)):
-        player = batting[i][0]
-        year = batting[i][1]
-        if (player, year) in all_stars:
-            Y[i] = 1
-    
-    print 'Number of all stars', sum(Y)
-    return Y
-    '''
     Y = scipy.zeros(len(rotten)) 
     for i in range(0, len(rotten)): 
         movie = rotten[i][1]
@@ -92,19 +81,7 @@ def test_classifier(clf, X, Y):
 
 
 def main():
-    '''batting, all_stars = load()
-    X = create_input(batting)
-    Y = create_output(batting, all_stars)
     
-    clf = linear_model.SGDClassifier(loss='log')
-    test_classifier(clf, X, Y)
-
-    clf = GaussianNB()
-    test_classifier(clf, X, Y)
-
-    clf = RandomForestClassifier(n_estimators=10, max_depth=10)
-    test_classifier(clf, X, Y)
-    '''
     rotten, oscars = load()
     X = create_input(rotten)
     Y = create_output(rotten, oscars)
