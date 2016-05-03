@@ -39,7 +39,10 @@ awards = ['Best Picture',
           'Best Writing, Motion Picture Story',
           'Best Actress in a Supporting Role',
           'Best Motion Picture of the Year',
-          'Best Writing, Original Story']
+          'Best Writing, Original Story',
+          'Best Performance by an Actor in a Supporting Role',
+          'Best Performance by an Actress in a Supporting Role',
+          'Best Performance by an Actress in a Leading Role']
 def awards_we_want(item):
     return item[1] in awards 
 

@@ -10,7 +10,7 @@ from variables import MACHINE, VUID, PAGE_TABLE, INDEX_TABLE, COLUMN_FAMILY, COL
 
 oscar_file = 'hdfs:///user/kirvenjt/oscar_data/oscar_winners_clean'
 all_movies = 'hdfs:///user/kirvenjt/oscar_data/omdb_responses'
-oscar_y = 'hdfs:///user/kirvenjt/oscar_data/oscar_y'
+oscar_y = 'hdfs:///user/kirvenjt/oscar_data/oscar_actor_info'
 
 '''
 an attempt at doing the rotten api requests from spark - too slow
@@ -26,14 +26,20 @@ def create_y(spark):
     movie_data = movie_data.map(get_fields)\
                            .map(lambda x: (x[1], x[2]))\
                            .keyBy(lambda x: (x[0], get_int_clean(x[1])))\
-
-           
-
+#              .distinct()\
     movie_data.leftOuterJoin(oscar_data)\
-              .map(lambda x: (x[0],encoding(x[1])))\
-              .distinct()\
-              .reduceByKey(lambda x,y: x+y)\
+              .map(lambda (key, (key2, info)): (key,info[3], info[1], info[4]) if info else (key, None))\
+              .filter(actor_awards_only)\
               .saveAsTextFile(oscar_y)
+#              
+
+#((u'Bridge of Spies', 2015), ((u'Bridge of Spies', u'2015'), [u'2016', u'Best Motion Picture of the Year', u'Bridge of Spies', u'Kristie Macosko Krieger', u'LOST']))           
+
+    # movie_data.leftOuterJoin(oscar_data)\
+    #           .map(lambda x: (x[0],encoding(x[1])))\
+    #           .distinct()\
+    #           .reduceByKey(lambda x,y: x+y)\
+    #           .saveAsTextFile(oscar_y)
 
 movie_awards = ['Best Picture',
                 'Best Writing, Screenplay',
@@ -46,7 +52,13 @@ actor_awards = ['Best Actor in a Supporting Role',
                 'Best Actor in a Leading Role',
                 'Best Performance by an Actor in a Leading Role',
                 'Best Actress in a Leading Role',
-                'Best Actress in a Supporting Role',]
+                'Best Actress in a Supporting Role',
+                'Best Performance by an Actor in a Supporting Role',
+                'Best Performance by an Actress in a Supporting Role',
+                'Best Performance by an Actress in a Leading Role']
+def actor_awards_only(item):
+    return item[1] and item[2] in actor_awards
+
 def encoding(item):
     if not item[1]:
         return 0
@@ -78,5 +90,3 @@ if __name__ == '__main__':
     spark = SparkContext(conf = conf)
     create_y(spark)
 
-
-    ((fname, lname), (original))
