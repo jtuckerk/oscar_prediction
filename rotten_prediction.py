@@ -6,7 +6,7 @@ from sklearn.metrics import roc_auc_score
 from sklearn.naive_bayes import GaussianNB
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.cross_validation import StratifiedKFold
-
+from sklearn import metrics 
 
 # omdb_responses: ['id','title','year','crit_score','cons_score',...]
 def load_rotten():
@@ -38,23 +38,23 @@ def load_oscars():
     
     return oscars
 
+
 def load():
     return load_rotten(), load_oscars()
 
 
 def create_input(rotten):
     # id, title, year, critscore, conscore, media type, runtime, metascore, released, imdb rating, imdb votes, box office, country 
-    # only include year, critscore, conscore
+    # only include year, critscore, conscore (metascore, imdb rating) 
     SKIP = 3 
-    WIDTH = 2 # len(rotten[0]) - SKIP  
+    WIDTH = 4 #2 # len(rotten[0]) - SKIP  
     X = scipy.zeros((len(rotten), WIDTH))
     for i in range(0, len(rotten)): 
-        for j in range(3,5): #(SKIP, WIDTH):
+        for j in range(3, 5): #(SKIP, WIDTH): 3,5 for just rotten
             X[i, j-SKIP] = rotten[i][j] if rotten[i][j] != 'N/A' else 0
-    
     return X 
     
-def create_output(rotten, oscars): #def create_output(batting, all_stars):
+def create_output(rotten, oscars):
     Y = scipy.zeros(len(rotten)) 
     for i in range(0, len(rotten)): 
         movie = rotten[i][1]
@@ -62,7 +62,6 @@ def create_output(rotten, oscars): #def create_output(batting, all_stars):
         if (movie, year) in oscars: 
             Y[i] = 1 
     print 'num of oscar noms', sum(Y)
-    print Y
     return Y 
 
 
@@ -80,6 +79,49 @@ def test_classifier(clf, X, Y):
     print clf.__class__.__name__, aucs, numpy.mean(aucs)
 
 
+def baseline(rotten, oscars): 
+    # certified fresh - crit score 75% or higher --> nomination 
+    Z = scipy.zeros(len(rotten))
+    W = scipy.zeros(len(rotten))
+    V = scipy.zeros(len(rotten))
+    U = scipy.zeros(len(rotten))
+    for i in range(0, len(rotten)):
+        movie = rotten[i][1]
+        year = rotten[i][2]
+        critscore = rotten[i][3]
+        
+        if (int(critscore) >= 75) and ((movie, year) in oscars): 
+            Z[i] = 1
+        if (int(critscore) >= 75) and not ((movie, year) in oscars):
+            W[i] = 1
+        if (int(critscore) < 75) and ((movie, year) in oscars): 
+            V[i] = 1
+        if (int(critscore) < 75) and not ((movie, year) in oscars): 
+            U[i] = 1
+    
+    #print 'num of true positives', 
+    tp = sum(Z)
+    #print 'num of false positives', 
+    fp = sum(W)
+    #print 'num of false negatives', 
+    fn = sum(V)
+    #print 'num of true negatives', 
+    tn = sum(U)
+    #true pos rate 
+    tpr = tp / (tp + fn) 
+    #false pos rate
+    fpr = fp / (fp + tn) 
+    
+    #area of trapezoid
+    auc = tpr * ((1-fpr) + 1) / 2
+    #auc = metrics.auc(fpr, tpr) 
+
+    #roc_auc = metrics.auc(fpr, tpr)
+    #print auc
+    #return auc
+    print "baseline AUC:", auc
+            
+
 def main():
     
     rotten, oscars = load()
@@ -94,6 +136,8 @@ def main():
 
     clf = RandomForestClassifier(n_estimators=10, max_depth=10)
     test_classifier(clf, X, Y)
+
+    baseline(rotten, oscars)
 
 
 if __name__ == '__main__':
