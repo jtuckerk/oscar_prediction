@@ -9,7 +9,7 @@ import re
 from variables import MACHINE, VUID, PAGE_TABLE, INDEX_TABLE, COLUMN_FAMILY, COLUMN
 
 all_movies = 'hdfs:///user/kirvenjt/oscar_data/omdb_responses'
-test = 'hdfs:///user/kirvenjt/oscar_data/test'
+test = 'hdfs:///user/kirvenjt/oscar_data/actor_experience'
 imdb_file = 'hdfs:///user/kirvenjt/oscar_data/top10ActorsPerMovie.txt'
 
     #                     .saveAsTextFile(test)\

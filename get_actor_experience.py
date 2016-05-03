@@ -6,7 +6,7 @@ movies = defaultdict(set)
 #actors movie file format
 #title, year, fname, lname, billing_position
 #(u'Day Zero', u'2007', u'Jon', u'Bernthal', u'3')
-with codecs.open('./test/full', 'r', encoding='utf-8') as r_file:
+with codecs.open('./actor_experience/full', 'r', encoding='utf-8') as r_file:
     for l in r_file.readlines():
         l=eval(l)
         fname = l[2]

@@ -8,7 +8,7 @@ import re
 
 from variables import MACHINE, VUID, PAGE_TABLE, INDEX_TABLE, COLUMN_FAMILY, COLUMN
 
-oscar_file = 'hdfs:///user/kirvenjt/oscar_data/oscar_winners_clean'
+oscar_file = 'hdfs:///user/kirvenjt/oscar_data/oscar_data.txt'
 all_movies = 'hdfs:///user/kirvenjt/oscar_data/omdb_responses'
 oscar_y = 'hdfs:///user/kirvenjt/oscar_data/oscar_actor_info'
 
@@ -19,7 +19,7 @@ def create_y(spark):
     oscar_data = spark.textFile(oscar_file)
     movie_data = spark.textFile(all_movies)
 #                           .keyBy(lambda x: (x[2], get_int_clean(x[0])-1))\     
-    oscar_data = oscar_data.map(get_fields)\
+    oscar_data = oscar_data.map(get_fields_raw)\
                            .keyBy(lambda x: (x[2], get_int_clean(x[0])-1))\
 
 
@@ -75,6 +75,10 @@ def p(item):
 
 def get_fields(text):
     return eval(text)
+def get_fields_raw(text):
+    t = text.split(" ||| ")
+#    t[4] = t[4].replace(t[0], '')
+    return [x.strip() for x in t]
 
 if __name__ == '__main__':
     conf = SparkConf()
