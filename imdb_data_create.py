@@ -8,21 +8,33 @@ import re
 
 from variables import MACHINE, VUID, PAGE_TABLE, INDEX_TABLE, COLUMN_FAMILY, COLUMN
 
-oscar_file = 'hdfs:///user/kirvenjt/oscar_data/oscar_winners_clean'
 all_movies = 'hdfs:///user/kirvenjt/oscar_data/omdb_responses'
-oscar_y = 'hdfs:///user/kirvenjt/oscar_data/oscar_y'
+test = 'hdfs:///user/kirvenjt/oscar_data/test'
+imdb_file = 'hdfs:///user/kirvenjt/oscar_data/top10ActorsPerMovie.txt'
+
+    #                     .saveAsTextFile(test)\
 
 '''
 an attempt at doing the rotten api requests from spark - too slow
 '''
 def create_y(spark):
-    oscar_data = spark.textFile(oscar_file)
+    imdb_data = spark.textFile(imdb_file)
     movie_data = spark.textFile(all_movies)
-#                           .keyBy(lambda x: (x[2], get_int_clean(x[0])-1))\     
-    oscar_data = oscar_data.map(get_fields)\
-                           .keyBy(lambda x: (x[2], get_int_clean(x[0])-1))\
+#    .keyBy(lambda x: (x[0], get_int_clean(x[1])))\
+    imdb_data = imdb_data.map(get_imdb_fields)\
+                         .filter(has_name_and_year)\
+                         .filter(is_weird)\
+                         .saveAsTextFile(test)
+ #                        .map(lambda (x,y): (x,y,1))\
 
+    movie_data = movie_data.map(get_fields)\
+                           .filter(has_name_and_year)\
+                           .map(lambda x: (x[1], x[2]))\
+                           .keyBy(lambda x: (x[0], get_int_clean(x[1])))\
 
+    c = movie_data.join(imdb_data).count()
+    print c
+'''
     movie_data = movie_data.map(get_fields)\
                            .map(lambda x: (x[1], x[2]))\
                            .keyBy(lambda x: (x[0], get_int_clean(x[1])))\
@@ -33,20 +45,13 @@ def create_y(spark):
               .map(lambda x: (x[0],encoding(x[1])))\
               .distinct()\
               .reduceByKey(lambda x,y: x+y)\
-              .saveAsTextFile(oscar_y)
+              .saveAsTextFile(test)
+'''
+def is_weird(item):
+    return len(re.findall(r'\d{4}', item))==0
+def has_name_and_year(title_year):
+    return not (title_year[0] == "" or title_year[1]=="")
 
-movie_awards = ['Best Picture',
-                'Best Writing, Screenplay',
-                'Best Director',
-                'Best Writing, Motion Picture Story',
-                'Best Motion Picture of the Year',
-                'Best Writing, Original Story']
-
-actor_awards = ['Best Actor in a Supporting Role',
-                'Best Actor in a Leading Role',
-                'Best Performance by an Actor in a Leading Role',
-                'Best Actress in a Leading Role',
-                'Best Actress in a Supporting Role',]
 def encoding(item):
     if not item[1]:
         return 0
@@ -64,6 +69,11 @@ def p(item):
 def get_fields(text):
     return eval(text)
 
+def get_imdb_fields(text):
+    text = text.split('|')
+    a = [x.strip() for x in text]
+    return a
+
 if __name__ == '__main__':
     conf = SparkConf()
     if sys.argv[1] == 'local':
@@ -77,6 +87,3 @@ if __name__ == '__main__':
 
     spark = SparkContext(conf = conf)
     create_y(spark)
-
-
-    ((fname, lname), (original))
