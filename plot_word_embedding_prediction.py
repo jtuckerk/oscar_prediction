@@ -20,7 +20,7 @@ def get_input():
     with codecs.open(plot_embedding_file, 'r', encoding='utf-8') as r:
         for l in r.readlines():
             l=eval(l)
-            plots[l[0]] = np.array(l[1]+[l[0][1]])
+            plots[l[0]] = np.array(l[1])#+[l[0][1]])
     return plots
 
 def determine_y(encoding):
@@ -29,7 +29,7 @@ def determine_y(encoding):
     #2 movie win
     #3 actor+movie win
 
-    if encoding <1:
+    if encoding !=2:
         return 0
     else:
         return 1
@@ -58,7 +58,7 @@ def get_X_y(input_dict, output_dict):
 
     return np.array(X), np.array(y)
 def test_classifier(clf, X, Y):
-    folds = StratifiedKFold(Y, 5)
+    folds = StratifiedKFold(Y, 20)
     aucs = []
     count =0
     for train, test in folds:
@@ -90,15 +90,6 @@ def main():
 
     clf = RandomForestClassifier(n_estimators=10, max_depth=10)
     test_classifier(clf, X, Y)
-    #print time.time()
-    #clf = svm.SVC(probability=True)
-    #test_classifier(clf, X, Y)
-    #print time.time()
-#    clf = MLPClassifier(algorithm='l-bfgs', alpha=1e-5, hidden_layer_sizes=(10, 4), random_state=1)
-#    test_classifier(clf, X, Y)
-    print time.time()
-#    clf = MLPClassifier(algorithm='l-bfgs', alpha=1e-5, hidden_layer_sizes=(6, 2), random_state=1)
-#    test_classifier(clf, X, Y)
 
 if __name__ == '__main__':
     main()

@@ -77,3 +77,6 @@ if __name__ == '__main__':
 
     spark = SparkContext(conf = conf)
     create_y(spark)
+
+
+    ((fname, lname), (original))

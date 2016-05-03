@@ -20,10 +20,11 @@ an attempt at doing the rotten api requests from spark - too slow
 def create_y(spark):
     imdb_data = spark.textFile(imdb_file)
     movie_data = spark.textFile(all_movies)
-
+#    .keyBy(lambda x: (x[0], get_int_clean(x[1])))\
     imdb_data = imdb_data.map(get_imdb_fields)\
                          .filter(has_name_and_year)\
-                         .keyBy(lambda x: (x[0], get_int_clean(x[1])))\
+                         .filter(is_weird)\
+                         .saveAsTextFile(test)
  #                        .map(lambda (x,y): (x,y,1))\
 
     movie_data = movie_data.map(get_fields)\
@@ -46,6 +47,8 @@ def create_y(spark):
               .reduceByKey(lambda x,y: x+y)\
               .saveAsTextFile(test)
 '''
+def is_weird(item):
+    return len(re.findall(r'\d{4}', item))==0
 def has_name_and_year(title_year):
     return not (title_year[0] == "" or title_year[1]=="")
 
