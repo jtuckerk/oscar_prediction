@@ -25,11 +25,11 @@ def get_input():
 
 def determine_y(encoding):
     #0 no wins 
-    #1 actor win
-    #2 movie win
+    #1 actor win/nom
+    #2 movie win/nom
     #3 actor+movie win
 
-    if encoding <1:
+    if encoding !=2:
         return 0
     else:
         return 1
