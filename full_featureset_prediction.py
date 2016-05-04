@@ -20,7 +20,10 @@ def get_input():
     OMDB = True
     IMDB_experience = True
     IMDB_oscar_prior = True 
-    PLOT = False #better or the same without this
+    PLOT = False #better or the same without this - only really adds noise
+
+    year_range_min = 1990
+    year_range_max = 2015
 
     #adding 6 features: scores from rotten tomoatoes, metacritic, and IMDB
     # as well as the movie duration
@@ -32,15 +35,20 @@ def get_input():
             l=eval(l)
             assert len(l) == 14
 
+
             critic_score = float(l[3])
             audiance_score = float(l[4]) if l[4] != 'N/A' else 0
             duration = float(l[6].split()[0]) if l[6] != 'N/A' else 0
             metascore = float(l[7]) if l[7] != 'N/A' else 0
             imdb_rating = float(l[10].replace(",", '')) if l[10] != 'N/A' else 0
             imdb_votes =  float(l[11].replace(",", '')) if l[11] != 'N/A' else 0
-            #year = int(re.findall(r'\d{4}', l[2]).pop())
-
+            year = int(re.findall(r'\d{4}', l[2]).pop())
+            #ignore movies out of this date range
+            if year<year_range_min or year>year_range_max:
+                continue
+            assert year!=1924
             features = [critic_score, audiance_score, duration, metascore, imdb_rating, imdb_votes]
+
             title_year = (l[1], re.findall(r'\d{4}', l[2]).pop())
             omdb_feats[title_year] = features
 
@@ -80,7 +88,9 @@ def get_input():
         for l in r.readlines():
             l=eval(l)
             assert len(l[1]) == plot_embedding_size
-            plot_embedding_feats[l[0]] = l[1]
+            title = l[0][0]
+            year = unicode(l[0][1])
+            plot_embedding_feats[(title, year)] = l[1]
 
     feats = {}
     # fill any missing features with all 0's and combine features to single array
@@ -110,14 +120,25 @@ def determine_y(encoding):
         return 1
 def get_output():
     oscars = {}
-    oscar_file = './data/oscar_y_full'
+    oscar_file = './data/oscar_y_full.txt'
+    year_data = {}
     with codecs.open(oscar_file, 'r', encoding='utf-8') as r:
         for l in r.readlines():
             l=eval(l)
             y = determine_y(l[1])
+
+            if not l[0][1] in year_data:
+                year_data[l[0][1]] = {"nom": 0, "not":0}
             #leave out any non winners - if missing in dict assume not winner 
             if y:
+                year_data[l[0][1]]["nom"] +=1
                 oscars[(l[0][0], unicode(l[0][1]))] =y 
+            else:
+                year_data[l[0][1]]["not"] +=1
+#uncomment to see number of nominated or not nominated movies for which we have
+# data per year
+#    for y in sorted(year_data.items()):
+#        print y
     return oscars
 
 def get_X_y(input_dict, output_dict):
