@@ -110,7 +110,7 @@ def determine_y(encoding):
         return 1
 def get_output():
     oscars = {}
-    oscar_file = './oscar_y/oscar_y_full'
+    oscar_file = './data/oscar_y_full'
     with codecs.open(oscar_file, 'r', encoding='utf-8') as r:
         for l in r.readlines():
             l=eval(l)
