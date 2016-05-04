@@ -16,7 +16,7 @@ def load():
 #loads (tite,year) with [,0,0,0,] plot representation
 def get_input():
     plots = {}
-    plot_embedding_file = './plot_embeddings.txt'
+    plot_embedding_file = 'data/plot_embeddings.txt'
     with codecs.open(plot_embedding_file, 'r', encoding='utf-8') as r:
         for l in r.readlines():
             l=eval(l)
@@ -35,7 +35,7 @@ def determine_y(encoding):
         return 1
 def get_output():
     oscars = {}
-    oscar_file = './oscar_y/oscar_y_full'
+    oscar_file = 'data/oscar_y_full.txt'
     with codecs.open(oscar_file, 'r', encoding='utf-8') as r:
         for l in r.readlines():
             l=eval(l)
