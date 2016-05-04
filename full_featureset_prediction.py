@@ -24,7 +24,7 @@ def get_input():
 
     #adding 6 features: scores from rotten tomoatoes, metacritic, and IMDB
     # as well as the movie duration
-    ombd_file = './omdb_responses/full'
+    ombd_file = './data/omdb_data.txt'
     omdb_feats = {}
     print "Getting OMDB features"
     with codecs.open(ombd_file, 'r', encoding='utf-8') as r:
@@ -47,7 +47,7 @@ def get_input():
 
     #adding 10 features: prior oscar nomination counts for the actors in the top 10
     # billing positions
-    actor_oscar_info = './actor_oscar_prior.txt'
+    actor_oscar_info = './data/actor_oscar_prior.txt'
     actor_oscar_feats = {}
     actor_oscar_size = 10
     print "Getting IMDB actor related features"
@@ -60,7 +60,7 @@ def get_input():
 
     #adding 10 features: prior movies acted in counts for the actors in the top 10
     # billing positions
-    actor_experience_data = './actor_experience.txt'
+    actor_experience_data = './data/actor_experience.txt'
     actor_ex_feats = {}
     actor_ex_size = 10
     with codecs.open(actor_experience_data, 'r', encoding='utf-8') as r:
@@ -72,7 +72,7 @@ def get_input():
     #adding 128 features: a plot summary represented as a vector
     #  created as the average of the non stopword word embedding
     #  vectors from the plot for each movie
-    plot_embedding_data = './plot_embeddings.txt'
+    plot_embedding_data = './data/plot_embeddings.txt'
     plot_embedding_feats = {}
     plot_embedding_size = 128
     print "Getting plot vector representations"
@@ -155,9 +155,6 @@ import time
 def main():
     X, Y = get_X_y(get_input(), get_output())
 
-    print X
-    print Y
-    
     clf = linear_model.SGDClassifier(loss='log')
     test_classifier(clf, X, Y)
 
