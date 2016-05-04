@@ -16,7 +16,7 @@ def load():
 #loads (tite,year) with [,0,0,0,] plot representation
 def get_input():
     exps = {}
-    actor_oscar_info = './actor_oscar_prior.txt'
+    actor_oscar_info = 'data/actor_oscar_prior.txt'
     with codecs.open(actor_oscar_info, 'r', encoding='utf-8') as r:
         for l in r.readlines():
             l=eval(l)
@@ -24,7 +24,7 @@ def get_input():
 
             exps[l[0]] = l[1]#+[l[0][1]])
 
-    actor_experience_data = './actor_experience.txt'
+    actor_experience_data = 'data/actor_experience.txt'
     with codecs.open(actor_experience_data, 'r', encoding='utf-8') as r:
         for l in r.readlines():
             l=eval(l)
@@ -45,7 +45,7 @@ def determine_y(encoding):
         return 1
 def get_output():
     oscars = {}
-    oscar_file = './oscar_y/oscar_y_full'
+    oscar_file = 'data/oscar_y_full.txt'
     with codecs.open(oscar_file, 'r', encoding='utf-8') as r:
         for l in r.readlines():
             l=eval(l)
