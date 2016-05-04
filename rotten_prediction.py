@@ -10,7 +10,7 @@ from sklearn import metrics
 
 # omdb_responses: ['id','title','year','crit_score','cons_score',...]
 def load_rotten():
-    f = open('omdb_responses/omdb_responses_full', 'r')
+    f = open('data/omdb_data.txt', 'r') #omdb_responses/omdb_responses_full', 'r')
     lines = f.readlines()
     f.close()
 
@@ -24,7 +24,7 @@ def load_rotten():
 
 # oscar_y: (('title',year), num_wins_noms)
 def load_oscars(): 
-    f = open('oscar_y/oscar_y_full', 'r')
+    f = open('data/oscar_y_full.txt', 'r')
     lines = f.readlines()
     f.close()
 
@@ -52,6 +52,7 @@ def create_input(rotten):
     for i in range(0, len(rotten)): 
         for j in range(3, 5): #(SKIP, WIDTH): 3,5 for just rotten
             X[i, j-SKIP] = rotten[i][j] if rotten[i][j] != 'N/A' else 0
+    print "total movies", len(rotten)
     return X 
     
 def create_output(rotten, oscars):
@@ -114,12 +115,7 @@ def baseline(rotten, oscars):
     
     #area of trapezoid
     auc = tpr * ((1-fpr) + 1) / 2
-    #auc = metrics.auc(fpr, tpr) 
-
-    #roc_auc = metrics.auc(fpr, tpr)
-    #print auc
-    #return auc
-    print "baseline AUC:", auc
+    print "baseline AUC:", auc, tp, fp, fn, tn
             
 
 def main():
