@@ -15,13 +15,22 @@ def load():
 
 #loads (tite,year) with [,0,0,0,] plot representation
 def get_input():
-    plots = {}
-    plot_embedding_file = './plot_embeddings.txt'
-    with codecs.open(plot_embedding_file, 'r', encoding='utf-8') as r:
+    exps = {}
+    actor_oscar_info = './actor_oscar_prior.txt'
+    with codecs.open(actor_oscar_info, 'r', encoding='utf-8') as r:
         for l in r.readlines():
             l=eval(l)
-            plots[l[0]] = np.array(l[1])#+[l[0][1]])
-    return plots
+            assert len(l[1]) == 10
+
+            exps[l[0]] = l[1]#+[l[0][1]])
+
+    actor_experience_data = './actor_experience.txt'
+    with codecs.open(actor_experience_data, 'r', encoding='utf-8') as r:
+        for l in r.readlines():
+            l=eval(l)
+            assert len(l[1]) == 10
+            exps[l[0]] = np.array(exps[l[0]] + l[1])
+    return exps
 
 def determine_y(encoding):
     #0 no wins 
@@ -29,9 +38,10 @@ def determine_y(encoding):
     #2 movie win/nom
     #3 actor+movie win
 
-    if encoding !=2:
+    if encoding !=3:
         return 0
     else:
+
         return 1
 def get_output():
     oscars = {}
@@ -42,23 +52,23 @@ def get_output():
             y = determine_y(l[1])
             #leave out any non winners - if missing in dict assume not winner 
             if y:
-                oscars[l[0]] =y 
+                oscars[(l[0][0], unicode(l[0][1]))] =y 
     return oscars
 
 def get_X_y(input_dict, output_dict):
     X = []
     y = []
     #make sure we have an input for all oscar winners or noms
-    for k in output_dict.keys():
-        assert k in input_dict
+    #for k in output_dict.keys():
+    #    assert k in input_dict
 
     for k in input_dict.keys():
-        X.append(input_dict[k])
+        X.append(input_dict.get(k, np.zeros(20)))
         y.append(output_dict.get(k, 0))
 
     return np.array(X), np.array(y)
 def test_classifier(clf, X, Y):
-    folds = StratifiedKFold(Y, 20)
+    folds = StratifiedKFold(Y, 5)
     aucs = []
     count =0
     for train, test in folds:
@@ -82,6 +92,7 @@ def main():
 
     print X
     print Y
+    
     clf = linear_model.SGDClassifier(loss='log')
     test_classifier(clf, X, Y)
 

@@ -12,9 +12,6 @@ oscar_file = 'hdfs:///user/kirvenjt/oscar_data/oscar_data.txt'
 all_movies = 'hdfs:///user/kirvenjt/oscar_data/omdb_responses'
 oscar_y = 'hdfs:///user/kirvenjt/oscar_data/oscar_actor_info'
 
-'''
-an attempt at doing the rotten api requests from spark - too slow
-'''
 def create_y(spark):
     oscar_data = spark.textFile(oscar_file)
     movie_data = spark.textFile(all_movies)
