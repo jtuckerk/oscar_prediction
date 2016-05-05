@@ -116,8 +116,8 @@ def determine_y(encoding):
     if encoding <1:
         return 0
     else:
-
         return 1
+
 def get_output():
     oscars = {}
     oscar_file = './data/oscar_y_full.txt'

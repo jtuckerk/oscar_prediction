@@ -1,6 +1,7 @@
 # oscar_prediction
 Big Data Project with Amy and Virinchi to predict which movies will be nominated for oscars
 
+# This is more for notes for our team, for a cleaner explanation of our project see the report.
 
 Things done:
 
